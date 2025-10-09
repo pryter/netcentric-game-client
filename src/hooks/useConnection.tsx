@@ -1,13 +1,12 @@
 "use client"
 import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {FramePayload, MsgPayload, Payload} from "@/lib/Payload";
-import {RoomFrame} from "@/lib/types";
 import {useClientAccount} from "@/hooks/useClientAccount";
 import {useRouter} from "next/navigation";
 const MAX_BUFFER_SIZE = 20
 import Image from "next/image";
 import classNames from "classnames";
-export const defaultRawFrameStream: RawFrameStream = {
+export const defaultRawFrameStream: RawFrameStream<any> = {
   frameBuffer: [],
   isStreamEnd: false,
 }
@@ -20,8 +19,8 @@ export type RawMsgStream = {
   msgBuffer: MsgPayload[],
 }
 
-export type RawFrameStream = {
-  frameBuffer: RoomFrame[],
+export type RawFrameStream<T extends Record<string, any>> = {
+  frameBuffer: T[],
   isStreamEnd: boolean
 }
 
@@ -50,7 +49,7 @@ type ConnectionContextType = {
    * Stream containing room frame data for real-time game state updates
    * Contains frameBuffer array and stream end status
    */
-  rawFrameStream: RawFrameStream
+  rawFrameStream: RawFrameStream<any>
 
   /**
    * Stream containing message payloads for real-time communication
@@ -144,7 +143,7 @@ const useConnectionContextAction = () => {
   const [state, setState] = useState<"disconnected" | "connected" | "authenticated">("disconnected")
   const [conn, setConn] = useState<WebSocket | null>(null)
   const [serverUser, setServerUser] = useState<ServerUser | null>(null)
-  const [frameBuffer, setFrameBuffer] = useState<RoomFrame[]>([])
+  const [frameBuffer, setFrameBuffer] = useState<Record<string, any>[]>([])
   const [msgBuffer, setMsgBuffer] = useState<MsgPayload[]>([])
   const [isEnd, setIsEnd] = useState<boolean>(false)
   const router = useRouter()
@@ -229,7 +228,7 @@ const useConnectionContextAction = () => {
           if (prev.length >= MAX_BUFFER_SIZE) {
             prev.pop()
           }
-          return [f.getFrame() as RoomFrame, ...prev]
+          return [f.getFrame() as Record<string, any>, ...prev]
         })
       }
     }
@@ -256,11 +255,13 @@ const useConnectionContextAction = () => {
     }
   }, [conn])
 
-  const useGuard = useCallback((to: string = "/") => {
-    if (state === "connected") {
-      router.push(to)
-    }
-  }, [state])
+  const useGuard = (to: string = "/") => {
+    useEffect(() => {
+      if (state === "connected") {
+        router.push(to)
+      }
+    }, [state, router]);
+  }
 
   const send = useCallback((msg: Payload) => {
     if (!conn) return

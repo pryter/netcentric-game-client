@@ -11,9 +11,9 @@ export type GameControllerContextType = {
    * @param data - Optional data payload to send with the action
    * @param timeout - Optional timeout in milliseconds before the request fails (default 5000ms)
    * @returns Promise that resolves with the server response message
-   * @throws Error if the request times out
+   * @throws Error if the request times server_dist_arm64
    */
-  sendAction: (name: string, data?: any, timeout?: number) => Promise<MsgPayload>
+  sendAction: (name: string, data?: any, timeout?: number) => Promise<MsgPayload | undefined>
 }
 
 const defaultContext: GameControllerContextType = {
@@ -53,9 +53,9 @@ const useGameControllerAction = () => {
 
   const sendAction = async (name: string, data?: any, timeout?: number) => {
     const TIMEOUT = timeout ?? 5 * 1000
-    const result = new Promise<MsgPayload>((resolve, reject) => {
+    const result = new Promise<MsgPayload | undefined>((resolve, reject) => {
       const t = setTimeout(() => {
-        reject(new Error("action timeout with no response"))
+        resolve(undefined)
       }, TIMEOUT)
       setMsgListeners((prev) => {
         return [...prev, (msg) => {

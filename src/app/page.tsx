@@ -62,7 +62,7 @@ export default function Home() {
       {
         isAuthenticated() && <div className="flex w-full flex-col items-center space-y-4 grow h-[50vh] justify-start">
               <GameButton onClick={() => {
-                router.push("/example")
+                router.push("/default")
               }} className="bg-yellow-500 border-4 border-yellow-600 text-white">
                   Enter the game
               </GameButton>

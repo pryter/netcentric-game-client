@@ -5,6 +5,7 @@ type PlayerData = {
   id: string,
   avatarUri: string,
   score: number,
+  isDisconnected: boolean,
 }
 
 /** RoomFrame is the frame that will be sent to the client
@@ -15,7 +16,7 @@ type PlayerData = {
  * @property round is the current round number
  * @property winner is the player who won the round
  * */
-export type RoomFrame = {
+export type ExampleRoomFrame = {
   score: 0,
   question: "",
   tick: 0,
@@ -23,4 +24,18 @@ export type RoomFrame = {
   state: "waiting"
 }
 
+type Question = {
+  problem: number[],
+  target: number,
+}
+
+export type OriginalRoomFrame = {
+  players: Record<string, PlayerData>;
+  timer: number;
+  breakTimer: number;
+  round: number;
+  winner: PlayerData | null;
+  state: RoomState;
+  question: Question | null;
+};
 // export const defaultFrame: RoomFrame = {players: {}, timer: 0, breakTimer: 0, round: 0, winner: null, state: "", question:""}

@@ -3,6 +3,7 @@ import {useFrameController} from "@/hooks/useFrameController";
 
 import {useGameController} from "@/hooks/useGameController";
 import {useConnection} from "@/hooks/useConnection";
+import {ExampleRoomFrame} from "@/lib/types";
 
 const Page = () => {
 
@@ -12,7 +13,7 @@ const Page = () => {
   // try using these two hooks to get frame, status and send action to the server
   //  Sadly, it cannot be tested yet due to the game server is not ready
   const {sendAction} = useGameController()
-  const {currentFrame} = useFrameController()
+  const {currentFrame} = useFrameController<ExampleRoomFrame>()
 
   const start = async () => {
     // send action can be await for its response

@@ -1,25 +1,24 @@
 "use client"
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {RoomFrame} from "@/lib/types";
 import {defaultRawFrameStream, RawFrameStream, useConnection} from "@/hooks/useConnection";
 
 
-export type FrameControllerContextType = {
+export type FrameControllerContextType<T extends Record<string, any>> = {
   /** Raw frame stream containing buffer of frames and stream end status */
-  rawFrameStream: RawFrameStream,
+  rawFrameStream: RawFrameStream<T>,
   /** Current active frame being displayed, undefined if no frames available */
-  currentFrame: RoomFrame | undefined,
+  currentFrame: T | undefined,
 }
 
-const defaultContext: FrameControllerContextType = {
+const defaultContext: FrameControllerContextType<any> = {
   rawFrameStream: defaultRawFrameStream,
   currentFrame: undefined,
 }
 
-export const FrameControllerContext = createContext<FrameControllerContextType>(defaultContext)
+export const FrameControllerContext = createContext<FrameControllerContextType<any>>(defaultContext)
 
-export const useFrameController = () => {
-  return useContext(FrameControllerContext)
+export const useFrameController = <T extends Record<string, any>>() => {
+  return useContext<FrameControllerContextType<T>>(FrameControllerContext)
 }
 
 export const FrameControllerProvider = ({children}: {children: React.ReactNode}) => {
@@ -29,7 +28,7 @@ export const FrameControllerProvider = ({children}: {children: React.ReactNode})
 }
 
 
-const useFrameControllerAction = (): FrameControllerContextType => {
+const useFrameControllerAction = (): FrameControllerContextType<any> => {
   const {rawFrameStream} = useConnection()
 
   const currentFrame = useMemo(() => {
