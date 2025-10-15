@@ -1,4 +1,4 @@
-type RoomState = "waiting" | "running" | "next-round-countdown" | "resolved" | ""
+type RoomState = "waiting" | "running" | "next-round-countdown" | "resolved" | "lobby-countdown"
 type PlayerData = {
   isReady: boolean,
   displayName: string,
@@ -6,6 +6,7 @@ type PlayerData = {
   avatarUri: string,
   score: number,
   isDisconnected: boolean,
+  roundStatus: "thinking" | "solved"
 }
 
 /** RoomFrame is the frame that will be sent to the client

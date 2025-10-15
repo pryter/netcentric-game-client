@@ -146,6 +146,8 @@ const useConnectionContextAction = () => {
   const [frameBuffer, setFrameBuffer] = useState<Record<string, any>[]>([])
   const [msgBuffer, setMsgBuffer] = useState<MsgPayload[]>([])
   const [isEnd, setIsEnd] = useState<boolean>(false)
+  const [reconnect, setReconnect] = useState<boolean>(true)
+  const [tries, setTries] = useState<number>(0)
   const router = useRouter()
 
   const isConnected = useCallback(() => {
@@ -174,6 +176,9 @@ const useConnectionContextAction = () => {
 
     const ws = new WebSocket(url)
     ws.onopen = (e) => {
+      //reset
+      setReconnect(true)
+      setTries(0)
       setState("connected")
     }
 
@@ -200,6 +205,13 @@ const useConnectionContextAction = () => {
         return;
       }
       if (unpacked.getType() === "message") {
+        if (unpacked.getData().name === "close-connection") {
+          console.log(unpacked.getData())
+          if (unpacked.getData().data === "duplicated-connection") {
+            // prevent reconnect to duplicated-connection
+            setReconnect(false)
+          }
+        }
 
         if (unpacked.getData().group === "credential") {
           // sepecial message
@@ -250,10 +262,20 @@ const useConnectionContextAction = () => {
   }
 
   useEffect(() => {
-    if (!conn) {
-      connect("ws://localhost:8080/ws")
+    if (tries >= 5) {
+      // auto stop reconnect
+      setReconnect(false)
     }
-  }, [conn])
+  }, [tries]);
+
+  useEffect(() => {
+    if (!conn) {
+      if (reconnect) {
+        connect("ws://localhost:8080/ws")
+        setTries(prev => (prev + 1))
+      }
+    }
+  }, [conn, reconnect])
 
   const useGuard = (to: string = "/") => {
     useEffect(() => {
