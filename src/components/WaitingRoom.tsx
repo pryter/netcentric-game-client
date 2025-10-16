@@ -4,10 +4,11 @@ import {useMemo, useState} from "react";
 import {useGameController} from "@/hooks/useGameController";
 import {Card} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Loader2, Users, Check, Clock, Copy, Link as LinkIcon} from "lucide-react";
+import {Loader2, Users, Check, Clock, Copy, Link as LinkIcon, Ghost} from "lucide-react";
 import {OriginalRoomFrame} from "@/lib/types";
 import {useFrameController} from "@/hooks/useFrameController";
 import {useConnection} from "@/hooks/useConnection";
+import {GameButton} from "@/components/Button";
 
 
 export type WaitingRoomProps = {
@@ -20,6 +21,15 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
   const {currentFrame} = useFrameController<OriginalRoomFrame>();
   const [isTogglingReady, setIsTogglingReady] = useState(false);
   const [copied, setCopied] = useState<"code" | "link" | null>(null);
+
+  const cdTimer = useMemo(() => {
+    const tstr = currentFrame?.breakTimer
+    if (!tstr) return null
+    if (tstr <= 1) {
+      return "Go!"
+    }
+    return Math.floor(tstr).toString()
+  }, [currentFrame])
 
   // Fallbacks for local preview
   const players = useMemo(() => {
@@ -55,6 +65,9 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
     if (p.isReady) {
       return {text: "Ready", Icon: Check, color: "text-green-400", chip: "bg-green-500/20"};
     }
+    if (p.isDisconnected) {
+      return {text: "Disconnected", Icon: Ghost, color: "text-gray-400", chip: "bg-gray-500/20"};
+    }
     return {text: "Waiting", Icon: Clock, color: "text-yellow-400", chip: "bg-yellow-500/20"};
     // maybe add a disconnected state if frame exposes it (?)
   }
@@ -68,7 +81,7 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
   }
   async function copyInviteLink() {
     try {
-      const url = `${location.origin}/?room=${encodeURIComponent(roomId)}`;
+      const url = `${location.origin}${location.pathname}?code=${encodeURIComponent(roomId)}`;
       await navigator.clipboard.writeText(url);
       setCopied("link");
       setTimeout(() => setCopied(null), 1200);
@@ -78,19 +91,14 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        backgroundImage: "url('/images/loading_bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
     >
       <Card className="w-full max-w-md bg-cyan-900/90 rounded-xl backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] p-8">
         <div className="text-center space-y-6">
-          <h1 className="text-5xl font-black text-yellow-400 drop-shadow-[0_4px_12px_rgba(234,179,8,0.8)] tracking-wider mb-2">
+          <h1 className="text-5xl font-black text-yellow-400 drop-shadow-[0_4px_12px_rgba(234,179,8,0.8)] tracking-wider mb-4">
             IQ180
           </h1>
 
-          <Loader2 className={`w-16 h-16 mx-auto ${allReady ? "text-yellow-400" : "text-green-400"} animate-spin`} />
+          {cdTimer ? <h1 className="h-16 text-white text-[40px] font-semibold">{cdTimer}</h1>:<Loader2 className={`w-16 h-16 mx-auto ${allReady ? "text-yellow-400" : "text-green-400"} animate-spin`} />}
 
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white">
@@ -170,14 +178,11 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
 
           </div>
 
-          <Button
+          <GameButton
             onClick={handleToggleReady}
             disabled={isTogglingReady || !myself}
-            className={`w-full h-14 text-lg font-bold rounded-xl transition-all shadow-lg ${
-              isReady
-                ? "bg-yellow-500 hover:bg-yellow-600 text-black shadow-[0_4px_0_0_rgba(202,138,4,1)] hover:shadow-[0_2px_0_0_rgba(202,138,4,1)] active:shadow-none hover:translate-y-[2px] active:translate-y-[4px]"
-                : "bg-green-500 hover:bg-green-600 text-white shadow-[0_4px_0_0_rgba(21,128,61,1)] hover:shadow-[0_2px_0_0_rgba(21,128,61,1)] active:shadow-none hover:translate-y-[2px] active:translate-y-[4px]"
-            }`}
+            color={!isReady ? "green" : "yellow"}
+            className={`w-full h-14 text-lg font-bold flex items-center text-white justify-center rounded-xl`}
           >
             {isTogglingReady ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -192,7 +197,7 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
                 I’m Ready!
               </>
             )}
-          </Button>
+          </GameButton>
 
           
           <p className="text-xs text-cyan-200/70 mt-2 h-4">

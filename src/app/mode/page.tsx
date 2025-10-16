@@ -62,9 +62,6 @@ export default function Home() {
         <GameButton onClick={createRoom}>
          Create Default Room
         </GameButton>
-          <GameButton color="red">
-            test
-          </GameButton>
         </div>
       </div>
     </div>

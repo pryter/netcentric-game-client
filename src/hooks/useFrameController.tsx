@@ -1,6 +1,7 @@
 "use client"
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {defaultRawFrameStream, RawFrameStream, useConnection} from "@/hooks/useConnection";
+import {usePathname} from "next/navigation";
 
 
 export type FrameControllerContextType<T extends Record<string, any>> = {

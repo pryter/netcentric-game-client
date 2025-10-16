@@ -1,7 +1,7 @@
 "use client"
 
 import {motion, TargetAndTransition, VariantLabels} from "framer-motion";
-import {FC, ReactNode} from "react";
+import {FC, ReactNode, useMemo} from "react";
 import classNames from "classnames";
 
 type ButtonProps = {
@@ -164,7 +164,9 @@ export const GameButton = (props: ButtonProps) => {
   const {onClick, children, color, className, disabled} = props;
   const defaultCN = className || 'px-8 py-2 text-2xl font-black rounded-2xl text-white';
 
-  const colorPalette = colorCombination[color ?? "purple"]
+  const colorPalette = useMemo(() => {
+    return colorCombination[color ?? "purple"]
+  }, [color])
 
   const hoverStyle: TargetAndTransition = {
     scale: 0.99,
@@ -175,17 +177,17 @@ export const GameButton = (props: ButtonProps) => {
     scale: 0.98,
     background: `linear-gradient(45deg, ${colorPalette["500"]}, ${colorPalette["600"]})`
   }
-  console.log(applyAlpha(colorPalette["400"], "0.8", "0_4px_0_"))
 
   return   <motion.button
     disabled={disabled}
-    initial={{background: tapStyle.background, borderColor: colorPalette["400"]}}
+    initial={{background: `linear-gradient(45deg, ${colorPalette["500"]}, ${colorPalette["600"]})`, borderColor: colorPalette["400"]}}
     style={{boxShadow: `0 4px 0 color-mix(in oklab, ${colorPalette["600"]} 80%, transparent)`}}
+    animate={{borderColor: colorPalette["400"], background: `linear-gradient(45deg, ${colorPalette["500"]}, ${colorPalette["600"]})`}}
     whileHover={hoverStyle}
     whileTap={tapStyle}
     onClick={onClick}
-    className={classNames(`${defaultCN} border-[${colorPalette["400"]}] cursor-pointer bg-gradient-to-br
-      border-2 active:shadow-[0_2px_0_rgba(147,51,234,0.8)] transition-all duration-200
+    className={classNames(defaultCN, `cursor-pointer bg-gradient-to-br
+      border-2 transition-all duration-200
       disabled:opacity-50 disabled:shadow-none focus-visible:ring-4 focus-visible:ring-yellow-400 focus-visible:ring-offset-2`)}
     aria-label={`s`}
   >

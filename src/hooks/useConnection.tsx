@@ -145,7 +145,7 @@ const useConnectionContextAction = () => {
   const [serverUser, setServerUser] = useState<ServerUser | null>(null)
   const [frameBuffer, setFrameBuffer] = useState<Record<string, any>[]>([])
   const [msgBuffer, setMsgBuffer] = useState<MsgPayload[]>([])
-  const [isEnd, setIsEnd] = useState<boolean>(false)
+  const [isEnd, setIsEnd] = useState<boolean>(true)
   const [reconnect, setReconnect] = useState<boolean>(true)
   const [tries, setTries] = useState<number>(0)
   const router = useRouter()
@@ -234,6 +234,8 @@ const useConnectionContextAction = () => {
         if (f.isEOFrame()) {
           setIsEnd(true)
           return
+        }else if (f.isSOFrame()) {
+          setIsEnd(false)
         }
 
         setFrameBuffer((prev) => {

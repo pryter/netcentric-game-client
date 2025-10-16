@@ -10,6 +10,7 @@ import {OriginalRoomFrame} from "@/lib/types";
 import {useFrameController} from "@/hooks/useFrameController";
 import {useConnection} from "@/hooks/useConnection";
 import {useRouter} from "next/navigation";
+import {GameButton} from "@/components/Button";
 
 type Player = {
   id: string;
@@ -60,8 +61,8 @@ export function Scoreboard() {
 
   const handlePlayAgain = () => {
     sendAction("create-og-game").then(r => {
-      if (r) {
-        router.push("/default2")
+      if (r?.getData().code) {
+        router.push(`/default2?code=${r.getData().code}`)
       }
     })
   }
@@ -71,13 +72,7 @@ export function Scoreboard() {
 
   return (
     <div
-      className="min-h-screen relative flex items-center justify-center p-4"
-      style={{
-        backgroundImage: "url('/images/main_bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className="min-h-screen relative flex items-center justify-center px-4"
     >
       <div className="absolute inset-0 backdrop-blur-sm bg-black/10 z-0" />
 
@@ -85,16 +80,15 @@ export function Scoreboard() {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-2xl"
+        className="relative z-10 w-full max-w-xl"
       >
-        <Card className="bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl overflow-hidden">
-          <CardHeader className="text-center space-y-2 pb-4 pt-6">
+        <Card className="py-6 bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl overflow-hidden">
+          <CardHeader className="text-center space-y-2 pb-4 pt-4">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             >
-              <Sparkles className="w-10 h-10 mx-auto text-yellow-400 mb-1" />
             </motion.div>
 
             <CardTitle className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 drop-shadow-[0_2px_8px_rgba(234,179,8,0.8)]">
@@ -188,22 +182,21 @@ export function Scoreboard() {
               transition={{ delay: 0.8 }}
               className="flex gap-3"
             >
-              <Button
+              <GameButton
                 onClick={handlePlayAgain}
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-3 hover:from-green-500 hover:to-emerald-500 font-bold text-base shadow-[0_4px_0_rgba(22,163,74,0.8)] active:shadow-[0_2px_0_rgba(22,163,74,0.8)] active:translate-y-[2px] transition-all"
+                className="flex items-center justify-center w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"
               >
                 <RotateCcw className="w-4 h-4" />
                 Play Again
-              </Button>
+              </GameButton>
 
-              <Button
+              <GameButton
                 onClick={handleLeaveRoom}
-                variant="outline"
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-3 border-cyan-400 text-cyan-200 px-4 py-3 font-bold text-base bg-cyan-900/50 hover:bg-cyan-800/70 hover:border-cyan-300 transition-all shadow-[0_4px_0_rgba(34,211,238,0.4)] active:shadow-[0_2px_0_rgba(34,211,238,0.4)] active:translate-y-[2px]"
-              >
+                color={"cyan"}
+                className="flex items-center justify-center w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"  >
                 <Home className="w-4 h-4" />
                 Leave Room
-              </Button>
+              </GameButton>
             </motion.div>
           </CardContent>
         </Card>

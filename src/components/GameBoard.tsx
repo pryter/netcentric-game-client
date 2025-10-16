@@ -10,22 +10,12 @@ import {useConnection} from "@/hooks/useConnection";
 import Image from "next/image";
 import {GameButton} from "@/components/Button";
 
-// Helper tips that rotate
 const HELPER_TIPS = [
   "Use each digit once.",
   "Hint: Parentheses can change everything.",
   "Hint: Avoid ÷0.",
   "Submit before time's up!",
 ]
-
-const MOCK_FRAME = {
-  digits: [3, 7, 2, 9, 5],
-  target: 24,
-  me: "player1",
-  turn: "player1",
-  turnStartedAt: Date.now(),
-  turnDurationMs: 60000,
-}
 
 // Digit button subcomponent with motion
 function DigitKey({
@@ -42,25 +32,9 @@ function DigitKey({
   onClick: () => void
 }) {
   return (
-    <motion.button
-      whileHover={!isUsed && isMyTurn ? { scale: 1.05 } : {}}
-      whileTap={!isUsed && isMyTurn ? { scale: 0.95 } : {}}
-      onClick={onClick}
-      disabled={!isMyTurn || isUsed}
-      className={`
-        w-20 h-20 text-3xl font-black rounded-2xl
-        transition-all duration-200
-        focus-visible:ring-4 focus-visible:ring-yellow-400 focus-visible:ring-offset-2
-        ${
-          isUsed
-            ? "bg-gray-600/50 text-gray-400 cursor-not-allowed opacity-50 border-2 border-gray-500"
-            : "bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:from-blue-400 hover:to-blue-500 border-2 border-blue-400 shadow-[0_4px_0_rgba(37,99,235,0.8)] active:shadow-[0_2px_0_rgba(37,99,235,0.8)] active:translate-y-[2px]"
-        }
-      `}
-      aria-label={`Digit ${digit}${isUsed ? " (used)" : ""}`}
-    >
+    <GameButton  color={isUsed ? "gray":"blue"} className="w-20 h-20 text-2xl font-black rounded-2xl text-white"  onClick={onClick}  disabled={!isMyTurn || isUsed}>
       {digit}
-    </motion.button>
+    </GameButton>
   )
 }
 
@@ -75,25 +49,9 @@ function OpKey({
   onClick: () => void
 }) {
   return (
-    <motion.button
-      whileHover={isMyTurn ? { scale: 1.05 } : {}}
-      whileTap={isMyTurn ? { scale: 0.95 } : {}}
-      onClick={onClick}
-      disabled={!isMyTurn}
-      className="
-        w-16 h-16 text-2xl font-black rounded-2xl
-        bg-gradient-to-br from-purple-500 to-purple-600 text-white
-        hover:from-purple-400 hover:to-purple-500
-        border-2 border-purple-400
-        shadow-[0_4px_0_rgba(147,51,234,0.8)] active:shadow-[0_2px_0_rgba(147,51,234,0.8)] active:translate-y-[2px]
-        transition-all duration-200
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
-        focus-visible:ring-4 focus-visible:ring-yellow-400 focus-visible:ring-offset-2
-      "
-      aria-label={`Operator ${operator}`}
-    >
+    <GameButton onClick={onClick} className="w-16 h-16 text-2xl text-white font-black rounded-2xl" color={"purple"} disabled={!isMyTurn}>
       {operator}
-    </motion.button>
+    </GameButton>
   )
 }
 
@@ -134,6 +92,10 @@ export function GameBoard() {
       solved: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "solved")
     }
   }, [currentFrame])
+
+  const mePlayer = useMemo(() => {
+    return Object.values(currentFrame?.players ?? {}).find((p) => (p.id === me?.uid))
+  }, [me, currentFrame])
 
   // Rotate helper tips every 6 sec // bonus maybe?
   useEffect(() => {
@@ -270,6 +232,7 @@ export function GameBoard() {
               >
                 {timeRemaining}s
               </p>
+              <p className="text-sm font-bold text-center text-yellow-400 uppercase tracking-wider">my score: {mePlayer?.score}</p>
             </div>
           </div>
 
@@ -279,16 +242,16 @@ export function GameBoard() {
             <div className="flex flex-col w-full mt-2">
               <div className="flex flex-row space-x-4 grow w-full">
                 {otherPlayers.thinking.map((p) => {
-                  return <motion.div layout="position" layoutId="player" key={p.id}>
-                    <Image key={`img-p-${p.id}`} src={p.avatarUri} alt={"profile"} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
+                  return <motion.div layout="position" layoutId="players" key={p.id}>
+                    <Image src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
                   </motion.div>
                 })}
               </div>
               <h1 className="text-xs font-bold text-white uppercase tracking-wider mt-4">Solved: {otherPlayers.solved.length}</h1>
               <div className="flex flex-row items-center px-4 space-x-4 mt-2 w-full grow bg-green-800 min-h-[46px] rounded-2xl inset-shadow-2xs inset-shadow-green-900">
                 {otherPlayers.solved.map((p) => {
-                  return <motion.div layout="position" layoutId="player" key={p.id}>
-                    <Image key={`img-p-${p.id}`} src={p.avatarUri} alt={"profile"} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
+                  return <motion.div layout="position" layoutId="players" key={p.id}>
+                    <Image src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
                   </motion.div>
                 })}
               </div>
