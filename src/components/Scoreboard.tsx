@@ -57,7 +57,7 @@ export function Scoreboard() {
       </div>
     );
 
-  const getName = (p: Player) => p.nickname ?? p.displayName ?? p.id;
+  const getName = (p: Player) => p ? p.nickname ?? p.displayName ?? p.id : "";
 
   const handlePlayAgain = () => {
     sendAction("create-og-game").then(r => {

@@ -242,7 +242,7 @@ export function GameBoard() {
             <div className="flex flex-col w-full mt-2">
               <div className="flex flex-row space-x-4 grow w-full">
                 {otherPlayers.thinking.map((p) => {
-                  return <motion.div layout="position" layoutId="players" key={p.id}>
+                  return <motion.div layout="position" layoutId={`players-${p.id}`} key={p.id}>
                     <Image src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
                   </motion.div>
                 })}
@@ -250,7 +250,7 @@ export function GameBoard() {
               <h1 className="text-xs font-bold text-white uppercase tracking-wider mt-4">Solved: {otherPlayers.solved.length}</h1>
               <div className="flex flex-row items-center px-4 space-x-4 mt-2 w-full grow bg-green-800 min-h-[46px] rounded-2xl inset-shadow-2xs inset-shadow-green-900">
                 {otherPlayers.solved.map((p) => {
-                  return <motion.div layout="position" layoutId="players" key={p.id}>
+                  return <motion.div layout="position" layoutId={`players-${p.id}`} key={p.id}>
                     <Image src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
                   </motion.div>
                 })}

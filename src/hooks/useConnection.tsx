@@ -4,6 +4,8 @@ import {FramePayload, MsgPayload, Payload} from "@/lib/Payload";
 import {useClientAccount} from "@/hooks/useClientAccount";
 import {useRouter} from "next/navigation";
 const MAX_BUFFER_SIZE = 20
+const CONNECTION_STRING = "ws://192.168.1.78:8080/ws"
+
 import Image from "next/image";
 import classNames from "classnames";
 export const defaultRawFrameStream: RawFrameStream<any> = {
@@ -164,7 +166,7 @@ const useConnectionContextAction = () => {
 
   const reConnect = () => {
     disconnect()
-    connect("ws://localhost:8080/ws")
+    connect(CONNECTION_STRING)
   }
 
   const connect = (url: string) => {
@@ -273,7 +275,7 @@ const useConnectionContextAction = () => {
   useEffect(() => {
     if (!conn) {
       if (reconnect) {
-        connect("ws://localhost:8080/ws")
+        connect(CONNECTION_STRING)
         setTries(prev => (prev + 1))
       }
     }
