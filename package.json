@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "server": "./server/server-arm64"
+    "server": "./scripts/server.sh"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",

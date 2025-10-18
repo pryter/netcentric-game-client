@@ -4,7 +4,7 @@ import {FramePayload, MsgPayload, Payload} from "@/lib/Payload";
 import {useClientAccount} from "@/hooks/useClientAccount";
 import {useRouter} from "next/navigation";
 const MAX_BUFFER_SIZE = 20
-const CONNECTION_STRING = "ws://192.168.1.78:8080/ws"
+const CONNECTION_STRING = "ws://localhost:8080/ws"
 
 import Image from "next/image";
 import classNames from "classnames";
