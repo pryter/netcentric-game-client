@@ -3,7 +3,7 @@ import {useFrameController} from "@/hooks/useFrameController";
 
 import {useGameController} from "@/hooks/useGameController";
 import {OriginalRoomFrame} from "@/lib/types";
-import {useEffect, useState} from "react";
+import {Suspense, useEffect, useState} from "react";
 import Image from "next/image";
 import {useConnection} from "@/hooks/useConnection";
 import {GameBoard} from "@/components/GameBoard";
@@ -59,12 +59,12 @@ const Page = () => {
   }
 
   return (
-    <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)"}} className="">
-      <Countdown isHidden={!currentFrame || currentFrame?.state !== "next-round-countdown"}/>
-      {(currentFrame?.state === "waiting" || currentFrame?.state === "lobby-countdown") && <WaitingRoom roomId={searchParams.get("code") as string}/>}
-      {currentFrame?.state === "running" && <GameBoard/>}
-      {currentFrame?.state === "resolved" && <Scoreboard/>}
-    </div>
+      <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)"}} className="">
+        <Countdown isHidden={!currentFrame || currentFrame?.state !== "next-round-countdown"}/>
+        {(currentFrame?.state === "waiting" || currentFrame?.state === "lobby-countdown") && <WaitingRoom roomId={searchParams.get("code") as string}/>}
+        {currentFrame?.state === "running" && <GameBoard/>}
+        {currentFrame?.state === "resolved" && <Scoreboard/>}
+      </div>
   )
 }
 

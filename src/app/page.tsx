@@ -69,7 +69,7 @@ export default function Home() {
       }
       {isAuthenticated() && <div className="fixed bottom-0 right-0 p-6">
           <div className="flex flex-row space-x-4 rounded-[16px] px-4">
-              <Image className="rounded-full shadow-sm z-1 p-1 w-[70px] h-[70px] bg-yellow-600" src={user?.photoURL ?? "/assets/placeholder_profile.jpg"} alt={"logo"}
+              <img className="rounded-full shadow-sm z-1 p-1 w-[70px] h-[70px] bg-yellow-600" src={user?.photoURL ?? "/assets/placeholder_profile.jpg"} alt={"logo"}
                      width={64} height={64}/>
               <div className="space-y-1 z-1">
                   <h2 className="text-lg text-yellow-50 font-semibold text-shadow-sm text-shadow-yellow-600">{serverUser?.nickname}</h2>

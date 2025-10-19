@@ -44,7 +44,7 @@ const Page = () => {
     <div className="flex space-x-2">
       {Object.values(currentFrame?.players ?? {}).map((v) => {
         return <div className="flex items-center flex-col" key={v.id}>
-          <Image src={v.avatarUri} alt={"profile"} width={"60"} height={"60"} className="size-16 bg-yellow-500 p-1 rounded-full"/>
+          <img src={v.avatarUri} alt={"profile"} width={"60"} height={"60"} className="size-16 bg-yellow-500 p-1 rounded-full"/>
           <h1>{v.displayName}</h1>
           <p className="text-xs font-medium text-gray-600">{v.isDisconnected ? "disconnected" : !v.isReady ? "waiting" : "ready"}</p>
         </div>

@@ -4,7 +4,7 @@ import {FramePayload, MsgPayload, Payload} from "@/lib/Payload";
 import {useClientAccount} from "@/hooks/useClientAccount";
 import {useRouter} from "next/navigation";
 const MAX_BUFFER_SIZE = 20
-const CONNECTION_STRING = "ws://localhost:8080/ws"
+const CONNECTION_STRING = "wss://netcen-game-server-oc1.pryter.me/ws"
 
 import Image from "next/image";
 import classNames from "classnames";
@@ -123,7 +123,6 @@ export const ConnectionProvider = ({children}: {children: ReactNode}) => {
 
   return <ConnectionContext.Provider value={v}>
     {<div className={classNames("flex items-center justify-center h-screen w-screen absolute top-0 left-0 z-[100]", !loading && "hidden")}>
-        <Image src="/assets/loading_bg.png" alt="bg" fill={true}/>
         <div className="h-screen w-screen absolute top-0 left-0  bg-[rgba(0,0,0,0.5)] backdrop-blur-[4px]"/>
         <div className="z-[101] relative w-full flex items-center justify-center">
           <h1 style={{fontSize: "30px"}} className="animate-pulse font-black text-white">Connecting..</h1>
