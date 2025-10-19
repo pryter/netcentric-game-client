@@ -1,0 +1,60 @@
+{
+  "name": "electron",
+  "version": "0.0.1",
+  "private": true,
+  "main": "scripts/main.js",
+  "publish": {
+    "provider": "github",
+    "owner": "pryter",
+    "repo": "netcentric-game-client",
+    "releaseType": "draft"
+  },
+  "scripts": {
+    "start": "electron .",
+    "build-next": "next build && next export",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "com.poppa.iq180-game",
+    "productName": "iq180-game",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "scripts/**/*",
+      "out/**/*",
+      "package.json"
+    ],
+    "asarUnpack": ["out"],
+    "mac": {
+      "target": [
+        {
+          "target": "default",
+          "arch": ["arm64"]
+        }
+      ],
+      "artifactName": "iq180-game-arm64.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "iq180-game-win64.${ext}"
+    }
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "electron": "^38.3.0",
+    "electron-builder": "^26.0.12"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

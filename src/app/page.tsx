@@ -9,12 +9,14 @@ import {router} from "next/client";
 import {Modal} from "@/components/Modal";
 import {MsgPayload} from "@/lib/Payload";
 import {GameButton, RoundedButton, SquareButton} from "@/components/Button";
+import Link from "next/link";
 
 export default function Home() {
 
   const {user, signOut, signIn} = useClientAccount()
   const [state, setState] = useState<boolean>(false)
   const {isAuthenticated, send, serverUser} = useConnection()
+  const [isInElectron, setInElectron] = useState<boolean>(false)
   const router = useRouter()
   const [nickname, setNickname] = useState<string>("")
 
@@ -27,6 +29,12 @@ export default function Home() {
       setState(false)
     }
   }, [serverUser]);
+
+  useEffect(() => {
+    // @ts-ignore
+    const isIn = window.navigator.userAgent === "Electron"
+    setInElectron(isIn)
+  }, []);
 
   const sendUserName = () => {
     if (!nickname) return
@@ -67,6 +75,37 @@ export default function Home() {
               </GameButton>
           </div>
       }
+      {!isInElectron && <div className="fixed bottom-0 left-0 p-6">
+        <h1 className="text-white font-semibold text-xl">Download now</h1>
+        <div className="flex flex-row space-x-2 mt-2">
+          <Link href={"https://github.com/pryter/netcentric-game-client/releases/download/0.0.1/iq180-game-arm64.dmg"}
+                target="_blank">
+            <GameButton color="amber" className="flex flex-col items-center justify-center size-[90px] rounded-2xl">
+              <div>
+                <svg className="size-12 mx-auto" fill="#fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.09997 22C7.78997 22.05 6.79997 20.68 5.95997 19.47C4.24997 17 2.93997 12.45 4.69997 9.39C5.56997 7.87 7.12997 6.91 8.81997 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/>
+                </svg>
+                <span className="text-lg font-semibold mt-1 text-white">MacOS</span>
+              </div>
+            </GameButton>
+          </Link>
+          <Link href={"https://github.com/pryter/netcentric-game-client/releases/download/0.0.1/iq180-game-win64.exe"}
+                target="_blank">
+            <GameButton color="amber" className="flex flex-col items-center justify-center size-[90px] rounded-2xl">
+              <div>
+                <svg className="size-12 mx-auto" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <title>microsoft_windows</title>
+                  <rect width="24" height="24" fill="none"/>
+                  <path fill="#fff"
+                        d="M3,12V6.75L9,5.43v6.48L3,12M20,3v8.75L10,11.9V5.21L20,3M3,13l6,.09V19.9L3,18.75V13m17,.25V22L10,20.09v-7Z"/>
+                </svg>
+                <span className="text-lg font-semibold mt-1 text-white">Windows</span>
+              </div>
+            </GameButton>
+          </Link>
+        </div>
+      </div>}
       {isAuthenticated() && <div className="fixed bottom-0 right-0 p-6">
           <div className="flex flex-row space-x-4 rounded-[16px] px-4">
               <img className="rounded-full shadow-sm z-1 p-1 w-[70px] h-[70px] bg-yellow-600" src={user?.photoURL ?? "/assets/placeholder_profile.jpg"} alt={"logo"}

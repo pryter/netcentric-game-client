@@ -8,23 +8,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "server": "./scripts/server.sh",
-    "build-app": "next build --turbopack && bun run dist",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder -mwl"
-  },
-  "build": {
-    "appId": "com.poppa.iq180-game",
-    "productName": "iq180-game",
-    "directories": {
-      "buildResources": "assets"
-    },
-    "files": [
-      "electron/**/*",
-      "out/**/*",
-      "package.json"
-    ],
-    "asarUnpack": ["out"]
+    "server": "./scripts/server.sh"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
@@ -48,9 +32,6 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
-    "@eslint/eslintrc": "^3",
-    "electron": "^38.3.0",
-    "electron-builder": "^26.0.12",
-    "express": "^5.1.0"
+    "@eslint/eslintrc": "^3"
   }
 }

@@ -22,8 +22,8 @@ function createWindow() {
 
     server.use(express.static(indexPath));
 
-    const listener = server.listen(88583, () => {
-        win.loadURL("http://localhost:88583");
+    const listener = server.listen(58583, () => {
+        win.loadURL("http://localhost:58583", {userAgent: "Electron"});
     });
 
     app.on("window-all-closed", () => {

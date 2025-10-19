@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   output: "export",
-  assetPrefix: "./", // <--- crucial
+  distDir: "electron/out",
+  assetPrefix: "./",
 };
 
 export default nextConfig;
