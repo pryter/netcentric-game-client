@@ -93,7 +93,7 @@ export default function Home() {
       <Modal state={showHelp}>
         <div className="flex flex-col relative bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl min-w-[320px] max-w-[90vw] py-4 px-6">
           <div className="flex items-start justify-between gap-4">
-            <h2 className="text-white font-black text-xl text-shadow-sm text-shadow-yellow-600">How to Play</h2>
+            <h2 className="text-white font-black text-2xl text-shadow-sm text-shadow-yellow-600">How to Play</h2>
             <Button
               aria-label="Close"
               variant="ghost"
@@ -107,7 +107,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <ol className="list-decimal pl-5 mt-2 space-y-2 text-sm leading-6 text-white">
+          <ol className="list-decimal pl-5 mt-6 space-y-2 font-medium text-md leading-6 text-white">
             <li>Create or join a room from the home screen.</li>
             <li>Wait in the Waiting Room until everyone is ready.</li>
             <li>Answer prompts quickly and correctly to score points.</li>
@@ -118,8 +118,8 @@ export default function Home() {
             Tip: You can check rankings on the Leaderboard (trophy icon).
           </p>
 
-          <div className="mt-4 self-endZ text-white">
-            <GameButton className="py-1.5 px-4 text-sm rounded-xl" onClick={() => setShowHelp(false)}>
+          <div className="mt-6 self-endZ text-white">
+            <GameButton className="py-1.5 px-4 text-md w-full font-semibold rounded-xl" onClick={() => setShowHelp(false)}>
               Got it
             </GameButton>
           </div>

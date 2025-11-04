@@ -4,77 +4,53 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GameButton } from "@/components/Button";
-import { useRouter } from "next/navigation";
-import { useClientAccount } from "@/hooks/useClientAccount"; // includes Google photoURL etc.
+import {usePathname, useRouter} from "next/navigation";
+import { useClientAccount } from "@/hooks/useClientAccount";
+import {useGameController} from "@/hooks/useGameController";
+import {useConnection} from "@/hooks/useConnection"; // includes Google photoURL etc.
 
-// === 1. Type definition ===
 type LeaderboardEntry = {
-  id: string;
-  name: string;
-  profileUrl?: string;
+  uid: string;
+  nickname: string;
+  avatar?: string;
   score: number;
-  ranking: number;
+  ranking: string;
+  level?: number;
 };
 
-// === 2. Mock data for now ===
-const MOCK_LEADERBOARD: LeaderboardEntry[] = [
-  {
-    id: "1",
-    name: "Mint",
-    profileUrl: "/assets/placeholder_profile.jpg",
-    score: 1250,
-    ranking: 1,
-  },
-  {
-    id: "2",
-    name: "Aimmy",
-    profileUrl: "/assets/placeholder_profile.jpg",
-    score: 1080,
-    ranking: 2,
-  },
-  {
-    id: "3",
-    name: "Peter",
-    profileUrl: "/assets/placeholder_profile.jpg",
-    score: 980,
-    ranking: 3,
-  },
-  {
-    id: "4",
-    name: "Papang",
-    profileUrl: "/assets/placeholder_profile.jpg",
-    score: 900,
-    ranking: 4,
-  },
-];
 
-// === 3. Leaderboard Page ===
 export default function LeaderboardPage() {
   const router = useRouter();
   const [players, setPlayers] = useState<LeaderboardEntry[]>([]);
-  const { user } = useClientAccount(); // this has user.photoURL
+  const {sendAction} = useGameController()
+  const {state} = useConnection()
 
-  // === 4. Load mock data now, plug API later ===
+
   useEffect(() => {
-    setPlayers(MOCK_LEADERBOARD);
-  }, []);
+    if (state === "authenticated") {
+      sendAction("get-leaderboard").then((r) => {
+        if (r && !r.isError()) {
+          const data = r.getData()
+          setPlayers(data.leaderboard ?? [])
+        }
+      })
+    }
+  }, [state]);
 
-  // === 5. Fallback chain ===
-  // Each player can have:
-  // - their own profileUrl (from DB)
-  // - or fallback to current signed-in user photo
-  // - or fallback to placeholder
+
   const getProfileUrl = (player: LeaderboardEntry) => {
     return (
-      player.profileUrl ||
-      user?.photoURL ||
+      player.avatar ||
       "/assets/placeholder_profile.jpg"
     );
   };
 
+  const cleanRank = (rank: string) => {
+    return parseInt(rank.replace("=", ""))
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-900 p-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -93,19 +69,19 @@ export default function LeaderboardPage() {
       </motion.div>
 
       {/* Table */}
-      <div className="w-full max-w-xl bg-black/40 border-4 border-yellow-400/70 rounded-2xl backdrop-blur-md p-4 shadow-[0_0_40px_rgba(234,179,8,0.3)]">
-        {players.map((player, idx) => (
+      <div className="w-full max-w-xl bg-black/40 border-4 border-yellow-400/70 rounded-2xl backdrop-blur-md p-4 min-h-[200px] max-h-[400px] overflow-y-auto shadow-[0_0_40px_rgba(234,179,8,0.3)]">
+        {players.length > 0 ? players.map((player, idx) => (
           <motion.div
-            key={player.id}
+            key={player.uid}
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.06 }}
             className={`flex items-center justify-between px-3 py-2 rounded-lg mb-2 ${
-              player.ranking === 1
+              cleanRank(player.ranking) === 1
                 ? "bg-yellow-600/40 border-2 border-yellow-400"
-                : player.ranking === 2
+                : cleanRank(player.ranking) === 2
                 ? "bg-gray-600/40 border-2 border-gray-300"
-                : player.ranking === 3
+                : cleanRank(player.ranking) === 3
                 ? "bg-amber-700/40 border-2 border-amber-400"
                 : "bg-white/10 border border-white/20"
             }`}
@@ -116,21 +92,17 @@ export default function LeaderboardPage() {
                 {player.ranking}
               </span>
 
-              {/* Profile Picture (same fallback logic as waiting room) */}
               <Image
                 src={getProfileUrl(player)}
-                alt={player.name}
+                alt={player.nickname}
                 width={36}
                 height={36}
                 unoptimized
-                onError={(e) =>
-                  (e.currentTarget.src = "/assets/placeholder_profile.jpg")
-                }
                 className="rounded-full bg-yellow-700/30"
               />
 
               {/* Name */}
-              <span className="font-semibold text-white">{player.name}</span>
+              <span className="font-semibold text-white">{player.nickname}</span>
             </div>
 
             {/* Score */}
@@ -138,7 +110,7 @@ export default function LeaderboardPage() {
               {player.score}
             </span>
           </motion.div>
-        ))}
+        )) : <h1 className="text-white font-semibold w-full text-center text-xl py-2 my-auto">Leaderboard is empty</h1>}
       </div>
 
       {/* Footer */}

@@ -1,7 +1,7 @@
 "use client"
 import {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {useConnection} from "@/hooks/useConnection";
-import {MsgPayload} from "@/lib/Payload";
+import {MsgPayload, Payload} from "@/lib/Payload";
 
 
 export type GameControllerContextType = {
@@ -17,7 +17,7 @@ export type GameControllerContextType = {
 }
 
 const defaultContext: GameControllerContextType = {
-  sendAction: async () => {throw new Error("not implemented")}
+  sendAction: async () => {throw new Error("not implemented")},
 }
 
 export const GameControllerContext = createContext<GameControllerContextType>(defaultContext)
@@ -32,47 +32,63 @@ export const useGameController = () => {
 
 const useGameControllerAction = () => {
 
-  const {rawMsgStream, send} = useConnection()
-  const [msgListeners, setMsgListeners] = useState<((msg: MsgPayload) => boolean)[]>([])
+  const {rawMsgStream, send, state} = useConnection()
+  const [msgListeners, setMsgListeners] = useState<{func: ((msg: MsgPayload) => boolean)}[]>([])
+
+
   const publish = useCallback((msg: MsgPayload) => {
+    if (msgListeners.length === 0) {
+      return
+    }
     const reduced = msgListeners.map(listener => {
-      const cleanup = listener(msg)
+      const cleanup = listener.func(msg)
       if (cleanup) {
         return undefined
       }
       return listener
     })
 
-    setMsgListeners(reduced.filter(l => l !== undefined) as ((msg: MsgPayload) => boolean)[])
+    setMsgListeners(reduced.filter(l => l !== undefined) as {func: ((msg: MsgPayload) => boolean)}[])
   }, [msgListeners])
 
 
   useEffect(() => {
+    console.log("rawMsgStream", rawMsgStream)
     publish(rawMsgStream.msgBuffer[0])
   }, [rawMsgStream.msgBuffer]);
 
-  const sendAction = async (name: string, data?: any, timeout?: number) => {
+  const sendAction = useCallback(async (name: string, data?: any, timeout?: number) => {
     const TIMEOUT = timeout ?? 5 * 1000
+    const cmsg = new MsgPayload({group: "client-action", name, data})
     const result = new Promise<MsgPayload | undefined>((resolve, reject) => {
       const t = setTimeout(() => {
         resolve(undefined)
       }, TIMEOUT)
-      setMsgListeners((prev) => {
-        return [...prev, (msg) => {
-          if (msg.getName() === name) {
-            clearTimeout(t)
-            resolve(msg)
-            return true
+
+      console.log("send", cmsg)
+
+      const l = (msg: any) => {
+        if (msg.getName() === name) {
+          if (msg.getMsgId() !== cmsg.getMsgId()) {
+            return false
           }
-          return false
-        }]
+          clearTimeout(t)
+          resolve(msg)
+          return true
+        }
+        return false
+      }
+
+      setMsgListeners((prev) => {
+        return [...prev, {func: l}]
       })
     })
 
-    send(new MsgPayload({group: "client-action", name, data}))
+    send(cmsg)
 
     return result
-  }
+  }, [send, setMsgListeners])
+
   return {
     sendAction
   }

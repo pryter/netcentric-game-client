@@ -5,7 +5,7 @@ import {useClientAccount} from "@/hooks/useClientAccount";
 import {useRouter} from "next/navigation";
 const MAX_BUFFER_SIZE = 20
 const CONNECTION_STRING = "wss://netcen-game-server-oc1.pryter.me/ws"
-
+// const CONNECTION_STRING = "ws://localhost:8080/ws"
 import Image from "next/image";
 import classNames from "classnames";
 export const defaultRawFrameStream: RawFrameStream<any> = {
@@ -228,7 +228,7 @@ const useConnectionContextAction = () => {
           if (prev.length >= MAX_BUFFER_SIZE) {
             prev.pop()
           }
-          return [new MsgPayload(unpacked.getData()), ...prev]
+          return [new MsgPayload(unpacked), ...prev]
         })
       } else if (unpacked.getType() === "frame") {
         const f = new FramePayload(unpacked.getData())
