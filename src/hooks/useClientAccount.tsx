@@ -1,7 +1,7 @@
 "use client"
 
 import {createContext, useContext, useEffect, useState} from "react";
-import {getAuth, GoogleAuthProvider, signInWithPopup, User} from "@firebase/auth";
+import {getAuth, GoogleAuthProvider, signInWithPopup, User} from "firebase/auth";
 import {initFirebase} from "@/lib/firebase";
 import {useConnection} from "@/hooks/useConnection";
 import {Payload} from "@/lib/Payload";

@@ -10,6 +10,9 @@ import {Modal} from "@/components/Modal";
 import {MsgPayload} from "@/lib/Payload";
 import {GameButton, RoundedButton, SquareButton} from "@/components/Button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+
 
 export default function Home() {
 
@@ -19,6 +22,8 @@ export default function Home() {
   const [isInElectron, setInElectron] = useState<boolean>(false)
   const router = useRouter()
   const [nickname, setNickname] = useState<string>("")
+  const [showHelp, setShowHelp] = useState(false)
+
 
   useEffect(() => {
     if (!isAuthenticated()) return
@@ -42,7 +47,85 @@ export default function Home() {
   }
 
   return (
-    <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%);"}} className="flex flex-col items-end h-screen relative w-full">
+    <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)"}} className="flex flex-col items-end h-screen relative w-full">
+        
+      {isAuthenticated() && (
+        <button
+          aria-label="How to play"
+          onClick={() => setShowHelp(true)}
+          className="absolute top-10 left-10 z-[300] rounded-2xl outline-none 
+           transition-transform duration-200 hover:scale-105 
+           active:scale-95 hover:drop-shadow-[0_0_8px_#FACC15]"
+        >
+          <Image
+            src="/assets/question-box.png"
+            alt="How to play"
+            width={55}
+            height={55}
+            priority
+            unoptimized
+            className="block select-none"
+          />
+        </button>
+      )}
+
+      {isAuthenticated() && (
+        <button
+          aria-label="Leaderboard"
+          onClick={() => router.push("/leaderboard")}
+          className="absolute top-9 right-9 z-[300] rounded-2xl outline-none 
+           transition-transform duration-200 hover:scale-105 
+           active:scale-95 hover:drop-shadow-[0_0_8px_#FACC15]"
+        >
+          <Image
+            src="/assets/trophy.png"
+            alt="Leaderboard"
+            width={65}
+            height={65}
+            priority
+            unoptimized
+            className="block select-none"
+          />
+        </button>
+      )}
+
+
+      <Modal state={showHelp}>
+        <div className="flex flex-col relative bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl min-w-[320px] max-w-[90vw] py-4 px-6">
+          <div className="flex items-start justify-between gap-4">
+            <h2 className="text-white font-black text-xl text-shadow-sm text-shadow-yellow-600">How to Play</h2>
+            <Button
+              aria-label="Close"
+              variant="ghost"
+              size="icon-sm"
+              className="rounded-lg text-white/90 hover:text-white hover:bg-white/10"
+              onClick={() => setShowHelp(false)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.3 1.4L10.6 13.4 4.3 19.7 3 18.3 9.3 12 3 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/>
+              </svg>
+            </Button>
+          </div>
+
+          <ol className="list-decimal pl-5 mt-2 space-y-2 text-sm leading-6 text-white">
+            <li>Create or join a room from the home screen.</li>
+            <li>Wait in the Waiting Room until everyone is ready.</li>
+            <li>Answer prompts quickly and correctly to score points.</li>
+            <li>Total points across rounds decide the winner.</li>
+          </ol>
+
+          <p className="mt-3 text-xs text-white/80">
+            Tip: You can check rankings on the Leaderboard (trophy icon).
+          </p>
+
+          <div className="mt-4 self-endZ text-white">
+            <GameButton className="py-1.5 px-4 text-sm rounded-xl" onClick={() => setShowHelp(false)}>
+              Got it
+            </GameButton>
+          </div>
+        </div>
+      </Modal>
+
       <Modal state={state}>
         <div className="flex flex-col bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl min-w-[300px] py-4 px-6 z-100">
           <h1 className="text-white font-black text-[20px] text-shadow-sm text-shadow-yellow-600">Welcome</h1>

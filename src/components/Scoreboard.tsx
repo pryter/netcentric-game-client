@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { useGameController } from "@/hooks/useGameController";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Trophy, Medal, Award, Sparkles, Home, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import {OriginalRoomFrame} from "@/lib/types";
@@ -11,6 +10,7 @@ import {useFrameController} from "@/hooks/useFrameController";
 import {useConnection} from "@/hooks/useConnection";
 import {useRouter} from "next/navigation";
 import {GameButton} from "@/components/Button";
+import Image from "next/image";
 
 type Player = {
   id: string;
@@ -176,6 +176,7 @@ export function Scoreboard() {
               </div>
             </motion.div>
 
+            {/* Existing buttons row */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -198,6 +199,22 @@ export function Scoreboard() {
                 Leave Room
               </GameButton>
             </motion.div>
+
+            {/* NEW: View Leaderboard (uses PNG icon) */}
+            <GameButton
+              onClick={() => router.push("/leaderboard")}
+              color={"yellow"}
+              className="flex items-center justify-center w-full gap-3 py-2 text-white font-semibold rounded-xl"
+            >
+              <Image
+                src="/assets/trophy.png"
+                alt="Leaderboard"
+                width={18}
+                height={18}
+                unoptimized
+              />
+              View Leaderboard
+            </GameButton>
           </CardContent>
         </Card>
       </motion.div>
