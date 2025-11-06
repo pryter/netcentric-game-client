@@ -7,7 +7,7 @@ import {ClientAccountContextProvider} from "@/hooks/useClientAccount";
 const comicNue = Changa({weight: ["300", "400","500","600", "700"]})
 
 export const metadata: Metadata = {
-  title: "IQ180 game",
+  title: "IQ180 Game",
   description: "IQ180 Game",
 };
 

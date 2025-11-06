@@ -1,4 +1,6 @@
 "use client"
+
+import { useSearchParams } from "next/navigation";
 import {useConnection} from "@/hooks/useConnection";
 import {useEffect, useMemo, useState} from "react";
 import {useClientAccount} from "@/hooks/useClientAccount";
@@ -11,6 +13,7 @@ import {MsgPayload} from "@/lib/Payload";
 import {GameButton, RoundedButton, SquareButton} from "@/components/Button";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
 
 
 
@@ -48,13 +51,13 @@ export default function Home() {
 
   return (
     <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)"}} className="flex flex-col items-end h-screen relative w-full">
-        
+
       {isAuthenticated() && (
         <button
           aria-label="How to play"
           onClick={() => setShowHelp(true)}
-          className="absolute top-10 left-10 z-[300] rounded-2xl outline-none 
-           transition-transform duration-200 hover:scale-105 
+          className="absolute top-10 left-10 z-[300] rounded-2xl outline-none
+           transition-transform duration-200 hover:scale-105
            active:scale-95 hover:drop-shadow-[0_0_8px_#FACC15]"
         >
           <Image
@@ -73,8 +76,8 @@ export default function Home() {
         <button
           aria-label="Leaderboard"
           onClick={() => router.push("/leaderboard")}
-          className="absolute top-9 right-9 z-[300] rounded-2xl outline-none 
-           transition-transform duration-200 hover:scale-105 
+          className="absolute top-9 right-9 z-[300] rounded-2xl outline-none
+           transition-transform duration-200 hover:scale-105
            active:scale-95 hover:drop-shadow-[0_0_8px_#FACC15]"
         >
           <Image
@@ -137,7 +140,7 @@ export default function Home() {
         </div>
       </Modal>
       <div className="h-[50vh] w-full flex items-center justify-center">
-        <h1 className="text-[140px] font-black text-white text-shadow-lg text-shadow-yellow-600">IQ180</h1>
+        <h1 className="text-[140px] justify-start font-black mt-80 text-white text-shadow-lg text-shadow-yellow-600">IQ180</h1>
       </div>
       {
         !isAuthenticated() && <div className="flex w-full flex-col items-center grow space-y-6 h-[50vh] justify-start">
