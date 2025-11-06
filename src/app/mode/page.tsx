@@ -16,6 +16,7 @@ export default function ModePage() {
     const { sendAction } = useGameController();
     const router = useRouter();
     const [code, setCode] = useState("");
+    const [codeClassic, setCodeClassic] = useState("");
 
     useEffect(() => {
         if (!isAuthenticated()) return;
@@ -39,14 +40,24 @@ export default function ModePage() {
         }, 4000);
     };
 
-    const createClassicRoom = () => {
-        sendAction("create-classic-game").then((room) => {
-            if (room) {
-                const jcode = room.getData().joinCode;
-                if (jcode) router.push(`/game?code=${jcode}&mode=classic`);
-            }
-        });
-    };
+
+  const joinOrCreateClassicRoom = () => {
+    console.log(codeClassic)
+    if (codeClassic.trim()) {
+      sendAction("join-og-game", { code: codeClassic }).then((res) => {
+        if (res?.getStatus() === 0)
+          router.push(`/game?code=${codeClassic}&mode=classic`);
+      });
+    } else {
+      sendAction("create-classic-game").then((room) => {
+        if (room) {
+          const jcode = room.getData().joinCode;
+          if (jcode)
+            router.push(`/game?code=${jcode}&mode=classic`);
+        }
+      });
+    }
+  };
 
     const joinOrCreateCompetitiveRoom = () => {
         if (code.trim()) {
@@ -118,7 +129,10 @@ export default function ModePage() {
                     title="Classic Mode"
                     desc="Take turns solving questions with friends."
                     buttonText="Play Classic"
-                    onClick={createClassicRoom}
+                    isCompetitive
+                    code={codeClassic}
+                    setCode={setCodeClassic}
+                    onClick={joinOrCreateClassicRoom}
                 />
 
                 {/* Competitive */}

@@ -17,7 +17,6 @@ export function TurnCountdown({ isHidden }: { isHidden?: boolean }) {
 
         const allPlayers = Object.values(currentFrame.players)
         const active = allPlayers.find((p) => p.id === currentFrame.currentPlayerId)
-        console.log("active", active)
         const others = allPlayers.filter((p) => p.id !== currentFrame.currentPlayerId)
 
         return { currentPlayer: active ?? null, others }
@@ -31,7 +30,7 @@ export function TurnCountdown({ isHidden }: { isHidden?: boolean }) {
         <div
             className={classNames(
                 isHidden ? "hidden" : "flex",
-                "flex-col items-center justify-center min-h-screen w-full text-center",
+                "fixed z-[20] top-0 left-0 flex-col items-center justify-center min-h-screen w-full text-center",
                 "bg-[radial-gradient(50%_50%_at_50%_50%,_#A659FE_0%,_#6F53FD_100%)]",
                 "animate-[smoothGlow_10s_ease-in-out_infinite]"
             )}
