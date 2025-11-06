@@ -37,15 +37,8 @@ export function Scoreboard() {
     const ranked = [...players].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
     const winner = ranked[0];
 
-    // unified avatar handling
-    const getProfileUrl = (player?: Player) => {
-        if (!player) return "/assets/placeholder_profile.jpg";
-        return (
-            player.avatar ||
-            player.avatarUri ||
-            "/assets/placeholder_profile.jpg"
-        );
-    };
+    const getProfileUrl = (player?: Player) =>
+        player?.avatar || player?.avatarUri || "/assets/placeholder_profile.jpg";
 
     const getRankIcon = (index: number) =>
         index === 0 ? (
@@ -63,27 +56,27 @@ export function Scoreboard() {
     const getName = (p: Player) => p?.nickname ?? p?.displayName ?? "Player";
 
     const handlePlayAgain = () => {
-      if (currentFrame?.gameType === "classic") {
-        sendAction("play-again").then((r) => {
-        });
-      }else {
-        sendAction("create-og-game").then((r) => {
-          const code = r?.getData().code;
-          if (code) router.push(`/default2?code=${code}`);
-        });
-      }
+        if (currentFrame?.gameType === "classic") {
+            sendAction("play-again");
+        } else {
+            sendAction("create-og-game").then((r) => {
+                const code = r?.getData().code;
+                if (code) router.push(`/default2?code=${code}`);
+            });
+        }
     };
 
     const handleLeaveRoom = () => router.push("/mode");
 
     return (
         <div
-            className="min-h-screen relative flex items-center justify-center px-4"
+            className="min-h-screen flex items-center justify-center px-4"
             style={{
                 background:
                     "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)",
             }}
         >
+            {/* Subtle overlay */}
             <div className="absolute inset-0 backdrop-blur-sm bg-black/10 z-0" />
 
             <motion.div
@@ -92,36 +85,35 @@ export function Scoreboard() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="relative z-10 w-full max-w-xl"
             >
-                <Card className="py-6 bg-gradient-to-br from-cyan-900/90 to-teal-900/90 backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl overflow-hidden">
+                <Card className="bg-gradient-to-br from-cyan-900/90 to-teal-900/90 border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] rounded-2xl overflow-hidden">
                     {/* Header */}
-                    <CardHeader className="text-center pb-4 pt-4">
-                        <h1 className="text-5xl font-black text-yellow-400 drop-shadow-[0_4px_12px_rgba(234,179,8,0.8)] tracking-wider mb-4">
+                    <CardHeader className="text-center pt-10 pb-8">
+                        <h1 className="text-5xl font-black text-yellow-400 drop-shadow-[0_4px_12px_rgba(234,179,8,0.8)] tracking-wider mb-3">
                             IQ180
                         </h1>
-                        <CardTitle className="text-[70px] font-black text-white text-shadow-lg text-shadow-yellow-600 tracking-wide mb-14">
+                        <CardTitle className="text-[64px] sm:text-[72px] font-black text-white text-shadow-lg text-shadow-yellow-600 tracking-wide mb-10">
                             Game Over
                         </CardTitle>
 
-
-                        <div>
+                        <div className="flex justify-center items-center">
                             <Image
                                 src="/assets/game.png"
                                 alt="icon"
-                                width={120}
-                                height={120}
+                                width={0}
+                                height={0}
+                                sizes="(max-width: 640px) 90px, (max-width: 1024px) 110px, 130px"
+                                className="w-[90px] sm:w-[110px] md:w-[130px] h-auto select-none drop-shadow-[0_0_16px_rgba(250,204,21,0.6)] mb-6"
                                 priority
                                 unoptimized
-                                className="block select-none items-center justify-center drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]"
                             />
                         </div>
-
 
                         {winner && (
                             <motion.p
                                 initial={{ opacity: 0, y: -8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.35 }}
-                                className="text-[1.7rem] font-bold text-white mt-1"
+                                className="text-[1.7rem] font-bold text-white"
                             >
                                 <span className="text-yellow-400">{getName(winner)}</span> wins!
                             </motion.p>
@@ -129,7 +121,7 @@ export function Scoreboard() {
                     </CardHeader>
 
                     {/* Scoreboard */}
-                    <CardContent className="space-y-4 px-6 pb-6">
+                    <CardContent className="space-y-5 px-6 pb-8">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -212,11 +204,11 @@ export function Scoreboard() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8 }}
-                            className="flex gap-3"
+                            className="flex flex-col sm:flex-row gap-3"
                         >
                             <GameButton
                                 onClick={handlePlayAgain}
-                                className="flex items-center justify-center w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"
+                                className="flex items-center justify-center w-full sm:w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"
                             >
                                 <RotateCcw className="w-4 h-4" />
                                 Play Again
@@ -224,8 +216,8 @@ export function Scoreboard() {
 
                             <GameButton
                                 onClick={handleLeaveRoom}
-                                color={"cyan"}
-                                className="flex items-center justify-center w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"
+                                color="cyan"
+                                className="flex items-center justify-center w-full sm:w-1/2 gap-3 py-2 text-white font-semibold rounded-xl"
                             >
                                 <Home className="w-4 h-4" />
                                 Leave Room
@@ -235,7 +227,7 @@ export function Scoreboard() {
                         {/* Leaderboard */}
                         <GameButton
                             onClick={() => router.push("/leaderboard")}
-                            color={"yellow"}
+                            color="yellow"
                             className="flex items-center justify-center w-full gap-3 py-2 text-white font-semibold rounded-xl"
                         >
                             <Image

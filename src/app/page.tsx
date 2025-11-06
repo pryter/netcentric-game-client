@@ -197,7 +197,7 @@ export default function Home() {
               <img className="rounded-full shadow-sm z-1 p-1 w-[70px] h-[70px] bg-yellow-600" src={user?.photoURL ?? "/assets/placeholder_profile.jpg"} alt={"logo"}
                      width={64} height={64}/>
               <div className="space-y-1 z-1">
-                  <h2 className="text-lg text-yellow-50 font-semibold text-shadow-sm text-shadow-yellow-600">{serverUser?.nickname}</h2>
+                  <h2 className="text-lg text-yellow-50 font-semibold text-shadow-sm text-shadow-yellow-600">Welcome, {serverUser?.nickname}.</h2>
                   <GameButton onClick={() => {
                     signOut()
                   }} className="text-sm py-1.5 px-4 text-white rounded-xl">
