@@ -8,6 +8,7 @@ import { Target, Clock } from "lucide-react"
 import {OriginalRoomFrame} from "@/lib/types";
 import {useConnection} from "@/hooks/useConnection";
 import {GameButton} from "@/components/Button";
+import classNames from "classnames";
 
 const HELPER_TIPS = [
   "Use each digit once.",
@@ -110,7 +111,7 @@ const hideFriendsPanel = isSingleMode || isClassicMode || playerCount <= 1;
   const otherPlayers = useMemo(() => {
     return {
       thinking: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "thinking"),
-      solved: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "solved")
+      solved: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "solved"),
     }
   }, [currentFrame])
 
@@ -200,8 +201,11 @@ const hideFriendsPanel = isSingleMode || isClassicMode || playerCount <= 1;
     try {
       if (currentFrame) {
         const response = await sendAction("submit", expression)
-        console.log("response", response, expression)
         if (response) {
+          if (response.isError()) {
+            setFeedback("Incorrect answer. Try again.")
+            return
+          }
           setFeedback("Submitted!")
         } else {
           setFeedback("Submission failed")
@@ -222,9 +226,10 @@ const hideFriendsPanel = isSingleMode || isClassicMode || playerCount <= 1;
         backgroundRepeat: "no-repeat",
       }}
     >
+      <div className={classNames(mePlayer?.roundStatus === "solved" ? "fixed" : "hidden", "transition-all top-0 left-0 bg-green-500/60 backdrop-blur-sm w-full h-full min-h-screen z-[18]")}/>
       <div className="w-full max-w-4xl space-y-6">
         {/* Header cards row: Target | Timer | (optional Friends) */}
-        <div className={`grid grid-cols-1 ${hideFriendsPanel ? "sm:grid-cols-2" : "sm:grid-cols-3"} gap-4`}>
+        <div className={`grid relative z-[19] grid-cols-1 ${hideFriendsPanel ? "sm:grid-cols-2" : "sm:grid-cols-3"} gap-4`}>
           {/* Target */}
           <div className="bg-gradient-to-br from-yellow-500/90 to-orange-500/90 backdrop-blur-md border-4 border-yellow-400 rounded-2xl p-6 shadow-[0_0_30px_rgba(234,179,8,0.5)]">
             <div className="flex flex-col items-center gap-2">
@@ -299,7 +304,7 @@ const hideFriendsPanel = isSingleMode || isClassicMode || playerCount <= 1;
           )}
         </div>
 
-        <div>
+        <div className="relative z-[19]">
           <label
             htmlFor="expression-display"
             className="text-lg font-bold text-white uppercase tracking-wider mb-3 block drop-shadow-lg"
@@ -308,10 +313,13 @@ const hideFriendsPanel = isSingleMode || isClassicMode || playerCount <= 1;
           </label>
           <div
             id="expression-display"
-            className="bg-gradient-to-br from-emerald-600/90 to-green-700/90 backdrop-blur-md border-4 border-emerald-400 rounded-2xl p-8 min-h-[100px] flex items-center justify-center shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+            className="relative overflow-clip bg-gradient-to-br from-emerald-600/90 to-green-700/90 backdrop-blur-md border-4 border-emerald-400 rounded-2xl p-8 min-h-[100px] flex items-center justify-center shadow-[0_0_30px_rgba(34,211,238,0.3)]"
             aria-label="Math expression editor"
             aria-live="polite"
           >
+            <div className={classNames(mePlayer?.roundStatus === "solved" ? "fixed" : "hidden","transition-all flex items-center justify-center absolute bg-gradient-to-br from-emerald-600 to-green-700 w-full h-full")}>
+              <span className="text-3xl font-mono text-white text-center break-all font-medium">Solved. Your opponent turn in {currentFrame?.timer}</span>
+            </div>
             <p className="text-3xl font-mono text-white text-center break-all font-medium">
               {expression || "Click digits and operators to build..."}
             </p>

@@ -1,6 +1,5 @@
 "use client"
 
-import { useSearchParams } from "next/navigation";
 import {useConnection} from "@/hooks/useConnection";
 import {useEffect, useMemo, useState} from "react";
 import {useClientAccount} from "@/hooks/useClientAccount";

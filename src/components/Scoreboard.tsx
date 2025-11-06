@@ -58,11 +58,16 @@ export function Scoreboard() {
     const handlePlayAgain = () => {
         if (currentFrame?.gameType === "classic") {
             sendAction("play-again");
-        } else {
-            sendAction("create-og-game").then((r) => {
+        } else if (currentFrame?.gameType === "solo") {
+            sendAction("create-solo-game").then((r) => {
                 const code = r?.getData().code;
-                if (code) router.push(`/default2?code=${code}`);
+                if (code) router.push(`/game?code=${code}`);
             });
+        } else {
+          sendAction("create-og-game").then((r) => {
+            const code = r?.getData().code;
+            if (code) router.push(`/game?code=${code}`);
+          });
         }
     };
 

@@ -8,6 +8,7 @@ import { User, Users, Trophy } from "lucide-react";
 import { GameButton } from "@/components/Button";
 import { ReactNode } from "react";
 import Image from "next/image";
+import classNames from "classnames";
 
 
 export default function ModePage() {
@@ -24,25 +25,17 @@ export default function ModePage() {
     }, [serverUser]);
 
     const playSolo = async () => {
-        const room = await sendAction("create-og-game");
+        const room = await sendAction("create-solo-game");
         if (!room) return;
 
         const jcode = room.getData().joinCode;
-        if (!jcode) return;
-
-        await sendAction("join-og-game", { code: jcode });
         await sendAction("ready", true);
 
-        router.push(`/game?code=${jcode}&mode=solo&localcountdown=1`);
-
-        setTimeout(async () => {
-            await sendAction("start-game", { code: jcode });
-        }, 4000);
+        router.push(`/game?code=${jcode}`);
     };
 
 
   const joinOrCreateClassicRoom = () => {
-    console.log(codeClassic)
     if (codeClassic.trim()) {
       sendAction("join-og-game", { code: codeClassic }).then((res) => {
         if (res?.getStatus() === 0)
@@ -88,21 +81,19 @@ export default function ModePage() {
                 Select Mode
             </h1>
 
-            <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-center justify-center">
+            <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-end justify-center">
                 {/* Solo */}
                 <ModeCard
                     icon={
-                        <div>
-                            <Image
-                                src="/assets/wizard-hat.png"
-                                alt="icon"
-                                width={90}
-                                height={90}
-                                priority
-                                unoptimized
-                                className="block select-none drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]"
-                            />
-                        </div>
+                      <Image
+                        src="/assets/wizard-hat.png"
+                        alt="icon"
+                        width={90}
+                        height={90}
+                        priority
+                        unoptimized
+                        className="block select-none drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]"
+                      />
                     }
                     title="Single Mode"
                     desc="Practice alone and sharpen your skills."
@@ -127,9 +118,10 @@ export default function ModePage() {
                         </div>
                     }
                     title="Classic Mode"
+                    isHighlighted={true}
                     desc="Take turns solving questions with friends."
-                    buttonText="Play Classic"
-                    isCompetitive
+                    buttonText="Create / Join"
+                    isAllowRoomCode
                     code={codeClassic}
                     setCode={setCodeClassic}
                     onClick={joinOrCreateClassicRoom}
@@ -138,22 +130,20 @@ export default function ModePage() {
                 {/* Competitive */}
                 <ModeCard
                     icon={
-                        <div className="mt-14 font-bold">
-                            <Image
-                                src="/assets/fireball.png"
-                                alt="icon"
-                                width={90}
-                                height={90}
-                                priority
-                                unoptimized
-                                className="block select-none drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]"
-                            />
-                        </div>
+                      <Image
+                        src="/assets/fireball.png"
+                        alt="icon"
+                        width={90}
+                        height={90}
+                        priority
+                        unoptimized
+                        className="block select-none drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]"
+                      />
                     }
                     title="Competitive Mode"
                     desc="Everyone plays the same question simultaneously."
                     buttonText="Create / Join"
-                    isCompetitive
+                    isAllowRoomCode
                     code={code}
                     setCode={setCode}
                     onClick={joinOrCreateCompetitiveRoom}
@@ -169,7 +159,8 @@ function ModeCard({
                       desc,
                       buttonText,
                       onClick,
-                      isCompetitive = false,
+                      isAllowRoomCode = false,
+                      isHighlighted = false,
                       code,
                       setCode,
                   }: {
@@ -178,13 +169,14 @@ function ModeCard({
     desc: string;
     buttonText: string;
     onClick: () => void;
-    isCompetitive?: boolean;
+    isAllowRoomCode?: boolean;
+    isHighlighted?: boolean;
     code?: string;
     setCode?: (v: string) => void;
 }) {
     return (
 
-        <div className="flex flex-col justify-between items-center bg-cyan-900/90 backdrop-blur-md border-4 border-yellow-500/80 rounded-xl shadow-[0_0_40px_rgba(234,179,8,0.4)] p-10 text-center w-[340px] h-[500px] hover:scale-105 transition-all duration-300">
+        <div className={classNames(isHighlighted ? "w-[340px] h-[500px]" : "w-[340px] h-[440px]", "flex flex-col justify-between items-center bg-cyan-900/90 backdrop-blur-md border-4 border-yellow-500/80 rounded-xl shadow-[0_0_40px_rgba(234,179,8,0.4)] p-10 text-center hover:scale-105 transition-all duration-300")}>
             {/* Top Section */}
             <div className="flex flex-col items-center justify-center flex-1 space-y-5">
                 {icon}
@@ -198,7 +190,7 @@ function ModeCard({
 
             {/* Bottom Section */}
             <div className="flex flex-col items-center justify-center w-full mt-6 space-y-3">
-                {isCompetitive ? (
+                {isAllowRoomCode ? (
                     <>
                         <div className="flex flex-col items-center justify-center space-y-3 w-full">
                             <input

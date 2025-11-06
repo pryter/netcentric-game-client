@@ -85,6 +85,10 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
     return p?.avatarUri || (isMe ? user?.photoURL || undefined : undefined);
   }
 
+  const mode = useMemo(() => {
+    return currentFrame?.gameType;
+  }, [currentFrame])
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-cyan-900/90 rounded-xl backdrop-blur-md border-4 border-yellow-500/80 shadow-[0_0_40px_rgba(234,179,8,0.4)] p-8">
@@ -104,7 +108,7 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
               {allReady ? "All Players Ready" : "Waiting for Players"}
             </h2>
 
-            {!!roomId && (
+            {mode !== "solo" && !!roomId && (
               <div className="flex items-center justify-center gap-2 text-cyan-200 text-sm">
                 <span>
                   Room Code: <span className="font-mono font-bold text-yellow-300">{roomId}</span>
@@ -124,16 +128,16 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
               <span className="font-semibold">{players.length} Players</span>
             </div>
 
-            <div className="flex items-center justify-center gap-2">
+            {mode !== "solo" && <div className="flex items-center justify-center gap-2">
               <Button
                 variant="outline"
                 onClick={copyInviteLink}
                 className="inline-flex items-center gap-2 border-cyan-400 text-cyan-200 bg-cyan-900/40 hover:bg-cyan-800/70"
               >
-                <LinkIcon className="w-4 h-4" />
+                <LinkIcon className="w-4 h-4"/>
                 {copied === "link" ? "Invite Link Copied" : "Copy Invite Link"}
               </Button>
-            </div>
+            </div>}
           </div>
 
           {/* Players list */}

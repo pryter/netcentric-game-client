@@ -68,34 +68,34 @@ export function TurnCountdown({ isHidden }: { isHidden?: boolean }) {
                 {Math.ceil(remaining)}s remaining
             </p>
 
-            {/* --- Player List --- */}
-            <div className="mt-10 flex flex-wrap justify-center gap-6 px-6 max-w-2xl">
-                {others?.map((p) => (
-                    <motion.div
-                        key={p.id}
-                        whileHover={{ scale: 1.05 }}
-                        className="flex flex-col items-center"
-                    >
-                        <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.4)]">
-                            {p.avatarUri ? (
-                                <Image
-                                    src={p.avatarUri}
-                                    alt={p.displayName}
-                                    fill
-                                    className="object-cover"
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
-                                    {p.displayName.charAt(0).toUpperCase()}
-                                </div>
-                            )}
-                        </div>
-                        <p className="text-sm text-white mt-2 font-medium opacity-80">
-                            {p.displayName}
-                        </p>
-                    </motion.div>
-                ))}
-            </div>
+            {/*/!* --- Player List --- *!/*/}
+            {/*<div className="mt-10 flex flex-wrap justify-center gap-6 px-6 max-w-2xl">*/}
+            {/*    {others?.map((p) => (*/}
+            {/*        <motion.div*/}
+            {/*            key={p.id}*/}
+            {/*            whileHover={{ scale: 1.05 }}*/}
+            {/*            className="flex flex-col items-center"*/}
+            {/*        >*/}
+            {/*            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.4)]">*/}
+            {/*                {p.avatarUri ? (*/}
+            {/*                    <Image*/}
+            {/*                        src={p.avatarUri}*/}
+            {/*                        alt={p.displayName}*/}
+            {/*                        fill*/}
+            {/*                        className="object-cover"*/}
+            {/*                    />*/}
+            {/*                ) : (*/}
+            {/*                    <div className="w-full h-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">*/}
+            {/*                        {p.displayName.charAt(0).toUpperCase()}*/}
+            {/*                    </div>*/}
+            {/*                )}*/}
+            {/*            </div>*/}
+            {/*            <p className="text-sm text-white mt-2 font-medium opacity-80">*/}
+            {/*                {p.displayName}*/}
+            {/*            </p>*/}
+            {/*        </motion.div>*/}
+            {/*    ))}*/}
+            {/*</div>*/}
 
             <style jsx>{`
         @keyframes smoothGlow {
