@@ -65,8 +65,12 @@ export function GameBoard() {
     // Get player info
     const players = Object.values(frame?.players ?? {})
     const mePlayer = players.find((p: any) => p.id === myId)
-    const thinkingPlayers = players.filter((p: any) => p.roundStatus === "thinking")
-    const solvedPlayers = players.filter((p: any) => p.roundStatus === "solved")
+    const otherPlayers = useMemo(() => {
+      return {
+        thinking: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "thinking"),
+        solved: Object.values(currentFrame?.players ?? {}).filter((p) => p.roundStatus === "solved")
+      }
+    }, [currentFrame])
 
     // Timer
     const maxTurn = 60
@@ -207,42 +211,30 @@ export function GameBoard() {
                     <div className="bg-gradient-to-br from-yellow-500/90 to-orange-500/90 border-4 border-yellow-400 rounded-2xl p-6 text-center">
                         <Target className="w-8 h-8 tracking-wider text-white mx-auto" />
                         <p className="text-xxl font-bold tracking-wider text-white uppercase">Target</p>
-                        <p className="text-8xl mt-3 font-black text-white">{target}</p>
+                        <p className="text-6xl mt-3 font-black text-white">{target}</p>
                     </div>
 
                     {/* Players */}
-                    <div className="bg-gradient-to-br from-cyan-700/90 to-cyan-800/90 border-4 border-cyan-400 rounded-2xl p-6">
-                        <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-widest">
-                            Players
-                        </h2>
-                        <div className="flex flex-row flex-wrap mt-3 gap-2 justify-center">
-                            {thinkingPlayers.map((p: any) => (
-                                <img
-                                    key={p.id}
-                                    src={p.avatarUri}
-                                    alt={p.displayName}
-                                    width={60}
-                                    height={60}
-                                    className="rounded-full outline outline-2 outline-gray-400"
-                                />
-                            ))}
-                        </div>
-                        <h1 className="text-xs font-bold text-white uppercase tracking-widest mt-4">
-                            Solved: {solvedPlayers.length}
-                        </h1>
-                        <div className="flex flex-row justify-center gap-2 mt-2">
-                            {solvedPlayers.map((p: any) => (
-                                <img
-                                    key={p.id}
-                                    src={p.avatarUri}
-                                    alt={p.displayName}
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full outline outline-2 outline-green-400"
-                                />
-                            ))}
-                        </div>
+                  <div className="flex flex-col bg-gradient-to-br from-emerald-600/90 to-green-700/90 backdrop-blur-md border-4 border-emerald-400 rounded-2xl px-6 py-4 shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+                    <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-wider">Friends</h2>
+                    <div className="flex flex-col w-full mt-2">
+                      <div className="flex flex-row space-x-4 grow w-full">
+                        {otherPlayers.thinking.map((p) => {
+                          return <motion.div layout="position" layoutId={`players-${p.id}`} key={p.id}>
+                            <img src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
+                          </motion.div>
+                        })}
+                      </div>
+                      <h1 className="text-xs font-bold text-white uppercase tracking-wider mt-4">Solved: {otherPlayers.solved.length}</h1>
+                      <div className="flex flex-row items-center px-4 space-x-4 mt-2 w-full grow bg-green-800 min-h-[46px] rounded-2xl inset-shadow-2xs inset-shadow-green-900">
+                        {otherPlayers.solved.map((p) => {
+                          return <motion.div layout="position" layoutId={`players-${p.id}`} key={p.id}>
+                            <img src={p.avatarUri} alt={`profile-${p.id}`} width={32} height={32} className={`rounded-full outline-3 ${p.roundStatus === "solved" ? "outline-green-400" : "outline-gray-400"}`} />
+                          </motion.div>
+                        })}
+                      </div>
                     </div>
+                  </div>
                 </div>
 
                 {/* Expression */}
@@ -251,7 +243,7 @@ export function GameBoard() {
                         Your Expression
                     </label>
                     <div className="flex flex-col bg-gradient-to-br from-emerald-600/90 to-green-700/90 border-4 border-emerald-400 items-center justify-center rounded-2xl px-6 py-4 shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-                        <p className="text-2xl text-gray-400 text-center break-all font-medium">
+                        <p className="text-2xl text-white text-center break-all font-medium">
                             {expression || "Click digits and operators to build..."}
                         </p>
                     </div>
@@ -317,7 +309,7 @@ export function GameBoard() {
                                 exit={{ opacity: 0, y: 10 }}
                                 className="text-base text-red-400 font-bold animate-pulse"
                             >
-                                Time's up!
+                                Time&#39;s up!
                             </motion.p>
                         ) : (
                             <motion.p

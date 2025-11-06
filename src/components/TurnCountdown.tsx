@@ -16,8 +16,9 @@ export function TurnCountdown({ isHidden }: { isHidden?: boolean }) {
             return { currentPlayer: null, others: [] as any[] }
 
         const allPlayers = Object.values(currentFrame.players)
-        const active = allPlayers.find((p) => p.roundStatus === "thinking")
-        const others = allPlayers.filter((p) => p.id !== active?.id)
+        const active = allPlayers.find((p) => p.id === currentFrame.currentPlayerId)
+        console.log("active", active)
+        const others = allPlayers.filter((p) => p.id !== currentFrame.currentPlayerId)
 
         return { currentPlayer: active ?? null, others }
     }, [currentFrame])
@@ -70,7 +71,7 @@ export function TurnCountdown({ isHidden }: { isHidden?: boolean }) {
 
             {/* --- Player List --- */}
             <div className="mt-10 flex flex-wrap justify-center gap-6 px-6 max-w-2xl">
-                {others.map((p) => (
+                {others?.map((p) => (
                     <motion.div
                         key={p.id}
                         whileHover={{ scale: 1.05 }}

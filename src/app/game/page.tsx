@@ -11,6 +11,7 @@ import {WaitingRoom} from "@/components/WaitingRoom";
 import {useParams, usePathname, useRouter, useSearchParams} from "next/navigation";
 import {Countdown} from "@/components/Countdown";
 import {Scoreboard} from "@/components/Scoreboard";
+import {TurnCountdown} from "@/components/TurnCountdown";
 
 // ui done
 const Page = () => {
@@ -60,6 +61,8 @@ const Page = () => {
 
     return (
         <div style={{background: "radial-gradient(50% 50% at 50% 50%, #A659FE 0%, #6F53FD 100%)"}} className="">
+          {currentFrame?.gameType === "classic" && <TurnCountdown
+              isHidden={currentFrame?.state !== "running" || currentFrame?.currentPlayerId === serverUser?.uid}/>}
             <Countdown isHidden={!currentFrame || currentFrame?.state !== "next-round-countdown"}/>
             {(currentFrame?.state === "waiting" || currentFrame?.state === "lobby-countdown") && <WaitingRoom roomId={searchParams.get("code") as string}/>}
             {currentFrame?.state === "running" && <GameBoard/>}

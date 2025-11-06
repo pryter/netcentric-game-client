@@ -140,7 +140,7 @@ export default function Home() {
         </div>
       </Modal>
       <div className="h-[50vh] w-full flex items-center justify-center">
-        <h1 className="text-[140px] justify-start font-black mt-80 text-white text-shadow-lg text-shadow-yellow-600">IQ180</h1>
+        <h1 className="text-[140px] font-black text-white text-shadow-lg text-shadow-yellow-600">IQ180</h1>
       </div>
       {
         !isAuthenticated() && <div className="flex w-full flex-col items-center grow space-y-6 h-[50vh] justify-start">

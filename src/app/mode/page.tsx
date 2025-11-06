@@ -32,7 +32,7 @@ export default function ModePage() {
         await sendAction("join-og-game", { code: jcode });
         await sendAction("ready", true);
 
-        router.push(`/default2?code=${jcode}&mode=solo&localcountdown=1`);
+        router.push(`/game?code=${jcode}&mode=solo&localcountdown=1`);
 
         setTimeout(async () => {
             await sendAction("start-game", { code: jcode });
@@ -40,10 +40,10 @@ export default function ModePage() {
     };
 
     const createClassicRoom = () => {
-        sendAction("create-og-game").then((room) => {
+        sendAction("create-classic-game").then((room) => {
             if (room) {
                 const jcode = room.getData().joinCode;
-                if (jcode) router.push(`/default2?code=${jcode}&mode=classic`);
+                if (jcode) router.push(`/game?code=${jcode}&mode=classic`);
             }
         });
     };
@@ -52,14 +52,14 @@ export default function ModePage() {
         if (code.trim()) {
             sendAction("join-og-game", { code }).then((res) => {
                 if (res?.getStatus() === 0)
-                    router.push(`/default2?code=${code}&mode=competitive`);
+                    router.push(`/game?code=${code}&mode=competitive`);
             });
         } else {
             sendAction("create-og-game").then((room) => {
                 if (room) {
                     const jcode = room.getData().joinCode;
                     if (jcode)
-                        router.push(`/default2?code=${jcode}&mode=competitive`);
+                        router.push(`/game?code=${jcode}&mode=competitive`);
                 }
             });
         }

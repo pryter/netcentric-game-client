@@ -41,6 +41,8 @@ export type OriginalRoomFrame = {
   state: RoomState;
   question: Question | null;
   currentTurn?: string;
+  currentPlayerId?: string
+  gameType?:  "solo" | "classic" | "competitive"
 };
 
 // export const defaultFrame: RoomFrame = {players: {}, timer: 0, breakTimer: 0, round: 0, winner: null, state: "", question:""}

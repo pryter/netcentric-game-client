@@ -63,10 +63,15 @@ export function Scoreboard() {
     const getName = (p: Player) => p?.nickname ?? p?.displayName ?? "Player";
 
     const handlePlayAgain = () => {
-        sendAction("create-og-game").then((r) => {
-            const code = r?.getData().code;
-            if (code) router.push(`/default2?code=${code}`);
+      if (currentFrame?.gameType === "classic") {
+        sendAction("play-again").then((r) => {
         });
+      }else {
+        sendAction("create-og-game").then((r) => {
+          const code = r?.getData().code;
+          if (code) router.push(`/default2?code=${code}`);
+        });
+      }
     };
 
     const handleLeaveRoom = () => router.push("/mode");
