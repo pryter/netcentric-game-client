@@ -106,6 +106,7 @@ export function Scoreboard() {
                                 alt="icon"
                                 width={0}
                                 height={0}
+                                referrerPolicy={"no-referrer"}
                                 sizes="(max-width: 640px) 90px, (max-width: 1024px) 110px, 130px"
                                 className="w-[90px] sm:w-[110px] md:w-[130px] h-auto select-none drop-shadow-[0_0_16px_rgba(250,204,21,0.6)] mb-6"
                                 priority
@@ -164,6 +165,7 @@ export function Scoreboard() {
                                             <Image
                                                 src={getProfileUrl(p)}
                                                 alt={getName(p)}
+                                                referrerPolicy={"no-referrer"}
                                                 fill
                                                 sizes="36px"
                                                 unoptimized
@@ -238,6 +240,7 @@ export function Scoreboard() {
                             <Image
                                 src="/assets/trophy.png"
                                 alt="Leaderboard"
+                                referrerPolicy={"no-referrer"}
                                 width={18}
                                 height={18}
                                 unoptimized

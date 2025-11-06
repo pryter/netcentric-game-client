@@ -161,6 +161,7 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
                   <div className="relative flex-shrink-0 rounded-full p-[2px] bg-gradient-to-br from-gray-500/40 to-gray-700/40">
                     {avatarSrc ? (
                       <Image
+                        referrerPolicy={"no-referrer"}
                         src={avatarSrc}
                         alt={`${name}'s avatar`}
                         width={40}

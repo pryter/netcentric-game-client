@@ -59,6 +59,7 @@ export default function LeaderboardPage() {
         <Image
           src="/assets/trophy.png"
           alt="Leaderboard Trophy"
+          referrerPolicy={"no-referrer"}
           width={56}
           height={56}
           priority
@@ -95,6 +96,7 @@ export default function LeaderboardPage() {
               <Image
                 src={getProfileUrl(player)}
                 alt={player.nickname}
+                referrerPolicy={"no-referrer"}
                 width={36}
                 height={36}
                 unoptimized

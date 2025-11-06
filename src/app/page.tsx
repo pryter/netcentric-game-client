@@ -63,6 +63,7 @@ export default function Home() {
             src="/assets/question-box.png"
             alt="How to play"
             width={55}
+            referrerPolicy={"no-referrer"}
             height={55}
             priority
             unoptimized
@@ -82,6 +83,7 @@ export default function Home() {
           <Image
             src="/assets/trophy.png"
             alt="Leaderboard"
+            referrerPolicy={"no-referrer"}
             width={65}
             height={65}
             priority
@@ -145,9 +147,6 @@ export default function Home() {
         !isAuthenticated() && <div className="flex w-full flex-col items-center grow space-y-6 h-[50vh] justify-start">
               <GameButton color={"blue"} onClick={signIn} >
                   Sign In With Google
-              </GameButton>
-              <GameButton color={"blue"} >
-                  Sign In With Facebook
               </GameButton>
           </div>
       }

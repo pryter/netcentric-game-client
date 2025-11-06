@@ -3,7 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    remotePatterns: [    {
+      protocol: "https",
+      hostname: "*", // Allow images from all domains
+    }],
     unoptimized: true,
   },
   output: "export",
