@@ -32,11 +32,15 @@ type Question = {
 
 export type OriginalRoomFrame = {
   players: Record<string, PlayerData>;
+    mode?: "solo" | "classic" | "competitive"  // added
+    turn?: string                              // added
   timer: number;
   breakTimer: number;
   round: number;
   winner: PlayerData | null;
   state: RoomState;
   question: Question | null;
+  currentTurn?: string;
 };
+
 // export const defaultFrame: RoomFrame = {players: {}, timer: 0, breakTimer: 0, round: 0, winner: null, state: "", question:""}
