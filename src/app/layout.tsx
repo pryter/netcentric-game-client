@@ -3,6 +3,8 @@ import {Changa, Comic_Neue} from "next/font/google";
 import "./globals.css";
 import {ConnectionProvider} from "@/hooks/useConnection";
 import {ClientAccountContextProvider} from "@/hooks/useClientAccount";
+import {AnimatePresence, motion} from "framer-motion";
+import {Transition} from "@/components/Transition";
 
 const comicNue = Changa({weight: ["300", "400","500","600", "700"]})
 
@@ -20,11 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${comicNue.className} antialiased`}
+        className={`${comicNue.className} antialiased bg-black`}
       >
       <ConnectionProvider>
         <ClientAccountContextProvider>
-          {children}
+          <AnimatePresence>
+            <Transition>
+              {children}
+            </Transition>
+          </AnimatePresence>
         </ClientAccountContextProvider>
       </ConnectionProvider>
       </body>

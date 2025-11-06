@@ -179,6 +179,7 @@ export const GameButton = (props: ButtonProps) => {
   }
 
   return   <motion.button
+    layout={true}
     disabled={disabled}
     initial={{background: `linear-gradient(45deg, ${colorPalette["500"]}, ${colorPalette["600"]})`, borderColor: colorPalette["400"]}}
     style={{boxShadow: `0 4px 0 color-mix(in oklab, ${colorPalette["600"]} 80%, transparent)`}}

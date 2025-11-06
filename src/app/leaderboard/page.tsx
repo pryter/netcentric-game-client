@@ -69,7 +69,7 @@ export default function LeaderboardPage() {
       </motion.div>
 
       {/* Table */}
-      <div className="w-full max-w-xl bg-black/40 border-4 border-yellow-400/70 rounded-2xl backdrop-blur-md p-4 min-h-[200px] max-h-[400px] overflow-y-auto shadow-[0_0_40px_rgba(234,179,8,0.3)]">
+      <motion.div layout={true} className="w-full max-w-xl bg-black/40 border-4 border-yellow-400/70 rounded-2xl backdrop-blur-md p-4 min-h-[200px] max-h-[400px] overflow-y-auto shadow-[0_0_40px_rgba(234,179,8,0.3)]">
         {players.length > 0 ? players.map((player, idx) => (
           <motion.div
             key={player.uid}
@@ -111,7 +111,7 @@ export default function LeaderboardPage() {
             </span>
           </motion.div>
         )) : <h1 className="text-white font-semibold w-full text-center text-xl py-2 my-auto">Leaderboard is empty</h1>}
-      </div>
+      </motion.div>
 
       {/* Footer */}
       <GameButton

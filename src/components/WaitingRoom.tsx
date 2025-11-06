@@ -48,9 +48,13 @@ export function WaitingRoom({roomId}: WaitingRoomProps) {
   async function handleToggleReady() {
     if (!myself) return;
     setIsTogglingReady(true);
-    try { await sendAction("ready", !isReady); }
+    try {
+      const r = await sendAction("ready", !isReady);
+    }
     catch (e) { console.error("[waiting-room] toggle-ready failed:", e); }
-    setIsTogglingReady(false);
+    setTimeout(() => {
+      setIsTogglingReady(false);
+    }, 1 * 1000)
   }
 
   function statusOf(p: any) {
